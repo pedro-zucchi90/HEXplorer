@@ -34,11 +34,12 @@ dependencies:
   sqflite: ^2.4.1
   path: ^1.8.3
   sqflite_common_ffi: ^2.3.5
-  camera: ^0.10.5+5
+  camera: ^0.11.1
   image: ^4.1.7
   path_provider: ^2.1.2
   palette_generator: ^0.3.3
   google_fonts: ^6.2.1
+  image_picker: ^1.1.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -98,3 +99,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  assets:
+    - assets/modelos/
