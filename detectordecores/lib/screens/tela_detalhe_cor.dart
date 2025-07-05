@@ -86,20 +86,6 @@ class TelaDetalheCor extends StatelessWidget {
                   titulo,
                   style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
-                IconButton(
-                  icon: Icon(Icons.info_outline, color: Colors.white70),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TelaDetalheCor(
-                          corPrincipal: cor,
-                          hexCor: hex,
-                        ),
-                      ),
-                    );
-                  },
-                ),
               ],
             ),
             const SizedBox(height: 10),

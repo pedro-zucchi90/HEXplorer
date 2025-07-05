@@ -63,7 +63,7 @@ class HexplorerApp extends StatelessWidget {
         elevation: 8,
         shape: StadiumBorder(),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.grey.shade900,
         elevation: 8,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
