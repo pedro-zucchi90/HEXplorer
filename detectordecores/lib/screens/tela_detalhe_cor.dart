@@ -14,32 +14,32 @@ class TelaDetalheCor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // obtem a representação RGB da cor principal para exibição
-    final rgb = 'RGB(${corPrincipal.red}, ${corPrincipal.green}, ${corPrincipal.blue})';
+    final rgb = 'RGB(${corPrincipal.r}, ${corPrincipal.g}, ${corPrincipal.b})';
 
     // Converte a cor principal para o modelo HSL para facilitar manipulações
     final hsl = HSLColor.fromColor(corPrincipal);
 
-    // cores complementares: são cores opostas no círculo cromático
-    // calcula a complementar (180°) e duas variações próximas (150° e 210°)
+    //cores complementares: são cores opostas no círculo cromático
+    //calcula a complementar (180°) e duas variações próximas (150° e 210°)
     final corComplementar = hsl.withHue((hsl.hue + 180) % 360).toColor();
     final corComp1 = hsl.withHue((hsl.hue + 150) % 360).toColor();
     final corComp2 = hsl.withHue((hsl.hue + 210) % 360).toColor();
 
-    // cores análogas são cores vizinhas no círculo cromático
-    // aqui, usamos deslocamentos de +30°, -30°, +60° e -60° para obter quatro análogas
+    //cores análogas são cores vizinhas no círculo cromático
+    //deslocamentos de +30°, -30°, +60° e -60° 
     final corAn1 = hsl.withHue((hsl.hue + 30) % 360).toColor();
     final corAn2 = hsl.withHue((hsl.hue - 30 + 360) % 360).toColor();
     final corAn3 = hsl.withHue((hsl.hue + 60) % 360).toColor();
     final corAn4 = hsl.withHue((hsl.hue - 60 + 360) % 360).toColor();
 
-    // tríades são três cores equidistantes no círculo cromático (120° de diferença)
+    //tríades são três cores equidistantes no círculo cromático (120° de diferença)
     final corTri1 = hsl.withHue((hsl.hue + 120) % 360).toColor();
     final corTri2 = hsl.withHue((hsl.hue - 120 + 360) % 360).toColor();
 
-    // tons são variações de luminosidade da cor principal, criando do mais escuro ao mais claro.
+    //variações de luminosidade da cor principal
     final tons = List.generate(4, (i) => hsl.withLightness((0.3 + i * 0.15).clamp(0.0, 1.0)).toColor());
 
-    // paleta harmônica sugerida inclui a cor principal, duas análogas e um tom mais claro da cor principal.
+    //inclui a cor principal, duas análogas e um tom mais claro da cor principal.
     final paletaSugerida = [
       corPrincipal,
       corAn1, // +30°

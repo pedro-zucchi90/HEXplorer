@@ -69,23 +69,21 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
 
   // ------ funções utilitárias e helpers (utilitários = Algo mais geral/genérico; Helpers = Algo mais específico)
   
-  // Calcula a saturação de uma cor (quão "viva" ou intensa ela é).
-  // A saturação é usada para priorizar cores mais vivas na imagem, evitando tons acinzentados, muito claros ou muito escuros.
-  // Quanto maior a saturação, mais "significativa" a cor tende a ser visualmente.
+  //calcula a saturação de uma cor
   double _saturacao(Color color) {
     // Converte os valores RGB de 0 a 255 para entre 0 e 1
-    final r = color.red / 255.0;
-    final g = color.green / 255.0;
-    final b = color.blue / 255.0;
+    final r = color.r / 255.0;
+    final g = color.g / 255.0;
+    final b = color.b / 255.0;
 
-    // Calcula o valor máximo e mínimo entre R, G e B
+    //calcula o valor máximo e mínimo entre R, G e B
     final maxVal = [r, g, b].reduce((a, b) => a > b ? a : b);
     final minVal = [r, g, b].reduce((a, b) => a < b ? a : b);
 
-    // Se todos os canais são iguais, a cor é acinzentada (saturação 0)
+    //se todos os canais são iguais, a cor é acinzentada (saturação 0)
     if (maxVal == minVal) return 0.0;
 
-    // Calcula a saturação usando a fórmula do modelo HSL
+    //calcula a saturação usando a fórmula do modelo HSL
     final l = (maxVal + minVal) / 2.0;
     final d = maxVal - minVal;
     return l > 0.5 ? d / (2.0 - maxVal - minVal) : d / (maxVal + minVal);
