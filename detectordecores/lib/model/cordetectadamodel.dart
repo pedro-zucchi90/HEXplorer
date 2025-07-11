@@ -3,7 +3,7 @@ class CorDetectadaModel {
   int? id;
   String nomeCor;
   String hexCor;
-  String imagemBase64; // volta a armazenar a imagem em base64
+  String? imagemPath; // novo campo para o path da imagem
   List<Map<String, String>> coresSignificativas; //lista de cores relacionadas (nome e hex)
   String? dataDetectada;
 
@@ -11,7 +11,7 @@ class CorDetectadaModel {
     this.id,
     required this.nomeCor,
     required this.hexCor,
-    required this.imagemBase64,
+    this.imagemPath,
     required this.coresSignificativas,
     this.dataDetectada,
   });
@@ -36,7 +36,7 @@ class CorDetectadaModel {
       id: map['id'],
       nomeCor: map['nome_cor'],
       hexCor: map['hex_cor'],
-      imagemBase64: map['imagem_base64'] ?? '',
+      imagemPath: map['imagem_path'],
       coresSignificativas: converterCoresSignificativas(map['cores_significativas']),
       dataDetectada: map['data_detectada'],
     );
@@ -47,7 +47,7 @@ class CorDetectadaModel {
     return {
       'nome_cor': nomeCor,
       'hex_cor': hexCor,
-      'imagem_base64': imagemBase64,
+      'imagem_path': imagemPath,
       'cores_significativas': coresSignificativas.map((cor) => "${cor['nome']},${cor['hex']}").join(';'),
       'data_detectada': dataDetectada,
     };

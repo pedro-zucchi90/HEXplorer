@@ -4,6 +4,7 @@ import 'package:testesqlite/dao/cordao.dart';
 import 'package:testesqlite/model/cordetectadamodel.dart';
 import 'screens/teladeteccao.dart';
 import 'dart:convert';
+import 'dart:io'; // Import para File
 import 'screens/tela_detalhe_cor.dart';
 
 void main() async {
@@ -118,6 +119,51 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
+  final List<CorDetectadaModel> _cores = [];
+  // Remover ScrollController
+  // final ScrollController _scrollController = ScrollController();
+  bool _carregando = false;
+  bool _temMais = true;
+  int _offset = 0;
+  final int _limit = 20;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarMais();
+    // _scrollController.addListener(_onScroll); // Remover listener
+  }
+
+  @override
+  void dispose() {
+    // _scrollController.dispose(); // Remover dispose
+    super.dispose();
+  }
+
+  // Remover _onScroll()
+
+  Future<void> _carregarMais() async {
+    setState(() { _carregando = true; });
+    final novasCores = await findAllCores(limit: _limit, offset: _offset);
+    setState(() {
+      _cores.addAll(novasCores);
+      _offset += novasCores.length;
+      _carregando = false;
+      if (novasCores.length < _limit) {
+        _temMais = false;
+      }
+    });
+  }
+
+  Future<void> _refresh() async {
+    setState(() {
+      _cores.clear();
+      _offset = 0;
+      _temMais = true;
+    });
+    await _carregarMais();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +171,26 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         title: const Text('HEXplorer', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         centerTitle: true,
       ),
-      body: _buildBody(),
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: _cores.isEmpty && !_carregando
+            ? const Center(child: Text('Nenhuma foto armazenada', style: TextStyle(fontSize: 18, color: Colors.grey)))
+            : ListView.builder(
+                // Remover controller: _scrollController,
+                itemCount: _cores.length + (_temMais ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < _cores.length) {
+                    final cor = _cores[index];
+                    return _buildCorCard(cor);
+                  } else {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                },
+              ),
+      ),
       floatingActionButton: _buildFAB(),
     );
   }
@@ -164,7 +229,18 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildFoto(cor.imagemBase64),
+            FutureBuilder<CorDetectadaModel?>(
+              future: _buscarCorCompletaPorId(cor.id!),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(width: double.infinity, height: 180, color: Colors.grey[300]);
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  return _buildFotoCompleta(snapshot.data!);
+                }
+                return Container(width: double.infinity, height: 180, color: Colors.grey[300]);
+              },
+            ),
             const SizedBox(height: 14),
             _buildInfoCor(cor),
             const SizedBox(height: 10),
@@ -172,21 +248,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
           ],
         ),
       ),
-    );
-  }
-
-  //----- exibir a foto
-  Widget _buildFoto(String imagemBase64) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(14),
-      child: imagemBase64.isNotEmpty
-          ? Image.memory(
-              base64Decode(imagemBase64),
-              width: double.infinity,
-              height: 180,
-              fit: BoxFit.cover,
-            )
-          : Container(width: double.infinity, height: 180, color: Colors.grey[300]),
     );
   }
 
@@ -277,7 +338,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         );
         if (confirm == true) {
           await removeCor(cor.id!);
-          setState(() {});
+          await _refresh();
         }
       },
     );
@@ -292,7 +353,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
           MaterialPageRoute(builder: (context) => const TelaDeteccao()),
         );
         if (result == true) {
-          setState(() {});
+          await _refresh();
         }
       },
       child: const Icon(Icons.camera_alt, size: 32),
@@ -310,6 +371,28 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         elevation: 2,
       )).toList(),
     );
+  }
+
+  // Adicionar método para buscar o registro completo pelo id
+  Future<CorDetectadaModel?> _buscarCorCompletaPorId(int id) async {
+    return await findCorById(id);
+  }
+
+  // Novo método para exibir a foto priorizando o path
+  Widget _buildFotoCompleta(CorDetectadaModel cor) {
+    if (cor.imagemPath != null && cor.imagemPath!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Image.file(
+          File(cor.imagemPath!),
+          width: double.infinity,
+          height: 180,
+          fit: BoxFit.cover,
+        ),
+      );
+    } else {
+      return Container(width: double.infinity, height: 180, color: Colors.grey[300]);
+    }
   }
 }
 

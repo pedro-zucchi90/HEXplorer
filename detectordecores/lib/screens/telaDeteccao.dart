@@ -175,19 +175,17 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     await _initializeControllerFuture;
 
     final file = await _controller!.takePicture();
-    final imageBytes = await File(file.path).readAsBytes();
-    final imagemBase64 = base64Encode(imageBytes);
+    final caminhoFoto = await _salvarFoto(file.path);
     final dadosImagem = await _processarImagem(file.path);
     _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
     final hex = dadosImagem['hex'];
-    final caminhoFoto = await _salvarFoto(file.path);
     final nomePersonalizado = await _solicitarNomeFoto(context);
     final dataFormatada = _dataHoraFormatada();
 
     final corDetectada = CorDetectadaModel(
       nomeCor: nomePersonalizado ?? '',
       hexCor: hex,
-      imagemBase64: imagemBase64,
+      imagemPath: caminhoFoto, // use o path salvo
       coresSignificativas: _coresSignificativas,
       dataDetectada: dataFormatada,
     );
@@ -207,39 +205,26 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
       return;
     }
 
-    // Redimensiona a imagem antes de converter para base64
-    final imageBytes = await File(pickedFile.path).readAsBytes();
-    img.Image? original = img.decodeImage(imageBytes);
-    if (original != null) {
-      int maxWidth = 400;
-      if (original.width > maxWidth) {
-        original = img.copyResize(original, width: maxWidth);
-      }
-      final resizedBytes = img.encodeJpg(original, quality: 85);
-      final imagemBase64 = base64Encode(resizedBytes);
-      final dadosImagem = await _processarImagem(pickedFile.path);
-      _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
-      final hex = dadosImagem['hex'];
-      final caminhoFoto = await _salvarFoto(pickedFile.path);
-
-      final nomePersonalizado = await _solicitarNomeFoto(context);
-      if (nomePersonalizado == null) {
-        setState(() { _processando = false; });
-        return;
-      }
-
-      final dataFormatada = _dataHoraFormatada();
-
-      final corDetectada = CorDetectadaModel(
-        nomeCor: nomePersonalizado ?? '',
-        hexCor: hex,
-        imagemBase64: imagemBase64,
-        coresSignificativas: _coresSignificativas,
-        dataDetectada: dataFormatada,
-      );
-
-      await insertCor(corDetectada);
+    final caminhoFoto = await _salvarFoto(pickedFile.path);
+    final dadosImagem = await _processarImagem(pickedFile.path);
+    _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
+    final hex = dadosImagem['hex'];
+    final nomePersonalizado = await _solicitarNomeFoto(context);
+    if (nomePersonalizado == null) {
+      setState(() { _processando = false; });
+      return;
     }
+    final dataFormatada = _dataHoraFormatada();
+
+    final corDetectada = CorDetectadaModel(
+      nomeCor: nomePersonalizado ?? '',
+      hexCor: hex,
+      imagemPath: caminhoFoto, // use o path salvo
+      coresSignificativas: _coresSignificativas,
+      dataDetectada: dataFormatada,
+    );
+
+    await insertCor(corDetectada);
     setState(() { _processando = false; });
     Navigator.pop(context, true);
   }
