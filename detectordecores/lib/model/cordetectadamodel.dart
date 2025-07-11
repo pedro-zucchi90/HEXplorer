@@ -3,7 +3,7 @@ class CorDetectadaModel {
   int? id;
   String nomeCor;
   String hexCor;
-  String imagemBase64;
+  String imagemBase64; // volta a armazenar a imagem em base64
   List<Map<String, String>> coresSignificativas; //lista de cores relacionadas (nome e hex)
   String? dataDetectada;
 

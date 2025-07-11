@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
 
 class TelaDetalheCor extends StatelessWidget {
   final Color corPrincipal;
@@ -51,26 +55,27 @@ class TelaDetalheCor extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Detalhes da Cor'),
         centerTitle: true,
+        // Removido os botões de compartilhar do AppBar
       ),
       backgroundColor: Colors.black,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _blocoCor(context, "Cor Principal", corPrincipal, hexCor, rgb),
+          _blocoCor(context, "Cor Principal", corPrincipal, hexCor),
           const SizedBox(height: 16),
           _exemploContraste(corPrincipal),
           const SizedBox(height: 16),
-          _blocoCores("Cores Complementares", [corComplementar, corComp1, corComp2]),
-          _blocoCores("Cores Análogas", [corAn1, corAn2, corAn3, corAn4]),
-          _blocoCores("Tons", tons),
-          _blocoCores("Paleta Sugerida", paletaSugerida),
-          _blocoCores("Tríade ", [corTri1, corTri2])
+          _blocoCores(context, "Tons", tons),
+          _blocoCores(context, "Paleta Sugerida", paletaSugerida),
+          _blocoCores(context, "Cores Complementares", [corComplementar, corComp1, corComp2]),
+          _blocoCores(context, "Cores Análogas", [corAn1, corAn2, corAn3, corAn4]),
+          _blocoCores(context, "Tríade ", [corTri1, corTri2])
         ],
       ),
     );
   }
 
-  Widget _blocoCor(BuildContext context, String titulo, Color cor, String hex, String rgb) {
+  Widget _blocoCor(BuildContext context, String titulo, Color cor, String hex) {
     return Card(
       color: Colors.grey.shade900,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -94,8 +99,22 @@ class TelaDetalheCor extends StatelessWidget {
               decoration: BoxDecoration(color: cor, borderRadius: BorderRadius.circular(10)),
             ),
             const SizedBox(height: 10),
-            Text('HEX: $hex', style: GoogleFonts.montserrat(color: Colors.white70)),
-            Text(rgb, style: GoogleFonts.montserrat(color: Colors.white70)),
+            Row(
+              children: [
+                Text('HEX: $hex', style: GoogleFonts.montserrat(color: Colors.white70)),
+                IconButton(
+                  icon: Icon(Icons.copy, size: 18, color: Colors.white54),
+                  tooltip: 'Copiar HEX',
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: hex));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('HEX copiado!')),
+                    );
+                  },
+                ),
+              ],
+            ),
+            // Removido o Text(rgb, ...)
           ],
         ),
       ),
@@ -126,7 +145,8 @@ class TelaDetalheCor extends StatelessWidget {
     );
   }
 
-  Widget _blocoCores(String titulo, List<Color> cores) {
+  // Adiciona o parâmetro BuildContext ao _blocoCores
+  Widget _blocoCores(BuildContext context, String titulo, List<Color> cores) {
     return Card(
       color: Colors.grey.shade900,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -135,7 +155,19 @@ class TelaDetalheCor extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(titulo, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(titulo, style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                IconButton(
+                  icon: Icon(Icons.share, color: Colors.white70),
+                  tooltip: 'Exportar XML',
+                  onPressed: () async {
+                    await _exportarPaletaXml(context, cores);
+                  },
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 10,
@@ -159,5 +191,25 @@ class TelaDetalheCor extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Remove o método _exportarPaleta (JSON)
+  Future<void> _exportarPaletaXml(BuildContext context, List<Color> paleta) async {
+    // Gera o XML
+    final buffer = StringBuffer();
+    buffer.writeln('<resources>');
+    for (int i = 0; i < paleta.length; i++) {
+      final hex = '#${paleta[i].value.toRadixString(16).substring(2).toUpperCase()}';
+      buffer.writeln('  <color name="cor${i + 1}">$hex</color>');
+    }
+    buffer.writeln('</resources>');
+
+    // Salva em arquivo temporário
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/paleta.xml');
+    await file.writeAsString(buffer.toString());
+
+    // Compartilha o arquivo
+    await Share.shareXFiles([XFile(file.path)], text: 'Paleta exportada em XML!');
   }
 }

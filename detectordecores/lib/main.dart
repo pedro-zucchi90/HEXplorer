@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:testesqlite/dao/cordao.dart';
 import 'package:testesqlite/model/cordetectadamodel.dart';
 import 'screens/teladeteccao.dart';
-import 'dart:io';
 import 'dart:convert';
 import 'screens/tela_detalhe_cor.dart';
 

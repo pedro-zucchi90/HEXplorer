@@ -16,7 +16,7 @@ Future<Database> getDatabase() async {
     String caminhoDatabase = join(await getDatabasesPath(), 'cores_detectadas.db');
     return await openDatabase(
       caminhoDatabase,
-      version: 2,
+      version: 4,
       onCreate: (Database db, int version) async {
         await db.execute('''
           CREATE TABLE cores_detectadas (
@@ -30,9 +30,12 @@ Future<Database> getDatabase() async {
         ''');
       },
       onUpgrade: (Database db, int oldVersion, int newVersion) async {
-        if (oldVersion < 2) {
+        if (oldVersion < 4) {
           await db.execute('''
-            CREATE TABLE IF NOT EXISTS cores_detectadas (
+            ALTER TABLE cores_detectadas RENAME TO temp_cores_detectadas;
+          ''');
+          await db.execute('''
+            CREATE TABLE cores_detectadas (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               nome_cor TEXT NOT NULL,
               hex_cor TEXT NOT NULL,
@@ -41,6 +44,11 @@ Future<Database> getDatabase() async {
               data_detectada TEXT
             )
           ''');
+          await db.execute('''
+            INSERT INTO cores_detectadas (id, nome_cor, hex_cor, imagem_base64, cores_significativas, data_detectada)
+            SELECT id, nome_cor, hex_cor, caminho_imagem as imagem_base64, cores_significativas, data_detectada FROM temp_cores_detectadas;
+          ''');
+          await db.execute('DROP TABLE temp_cores_detectadas;');
         }
       },
     );

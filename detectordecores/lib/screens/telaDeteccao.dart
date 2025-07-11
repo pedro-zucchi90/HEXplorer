@@ -7,7 +7,6 @@ import 'package:palette_generator/palette_generator.dart';
 import '../dao/cordao.dart';
 import '../model/cordetectadamodel.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:converter/converter.dart';
 import 'dart:convert';
 
 
@@ -45,7 +44,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
       final camera = cameras.first;
       _controller = CameraController(
         camera,
-        ResolutionPreset.medium,
+        ResolutionPreset.max,
         enableAudio: false,
         imageFormatGroup: ImageFormatGroup.yuv420,
       );
@@ -194,7 +193,6 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     );
 
     await insertCor(corDetectada);
-    
     setState(() { _processando = false; });
     Navigator.pop(context, true);
   }
@@ -209,32 +207,39 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
       return;
     }
 
+    // Redimensiona a imagem antes de converter para base64
     final imageBytes = await File(pickedFile.path).readAsBytes();
-    final imagemBase64 = base64Encode(imageBytes);
-    final dadosImagem = await _processarImagem(pickedFile.path);
-    _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
-    final hex = dadosImagem['hex'];
-    final caminhoFoto = await _salvarFoto(pickedFile.path);
+    img.Image? original = img.decodeImage(imageBytes);
+    if (original != null) {
+      int maxWidth = 400;
+      if (original.width > maxWidth) {
+        original = img.copyResize(original, width: maxWidth);
+      }
+      final resizedBytes = img.encodeJpg(original, quality: 85);
+      final imagemBase64 = base64Encode(resizedBytes);
+      final dadosImagem = await _processarImagem(pickedFile.path);
+      _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
+      final hex = dadosImagem['hex'];
+      final caminhoFoto = await _salvarFoto(pickedFile.path);
 
-    final nomePersonalizado = await _solicitarNomeFoto(context);
-    if (nomePersonalizado == null) {
-      setState(() { _processando = false; });
-      return;
+      final nomePersonalizado = await _solicitarNomeFoto(context);
+      if (nomePersonalizado == null) {
+        setState(() { _processando = false; });
+        return;
+      }
+
+      final dataFormatada = _dataHoraFormatada();
+
+      final corDetectada = CorDetectadaModel(
+        nomeCor: nomePersonalizado ?? '',
+        hexCor: hex,
+        imagemBase64: imagemBase64,
+        coresSignificativas: _coresSignificativas,
+        dataDetectada: dataFormatada,
+      );
+
+      await insertCor(corDetectada);
     }
-
-    final dataFormatada = _dataHoraFormatada();
-
-
-    final corDetectada = CorDetectadaModel(
-      nomeCor: nomePersonalizado ?? '',
-      hexCor: hex,
-      imagemBase64: imagemBase64,
-      coresSignificativas: _coresSignificativas,
-      dataDetectada: dataFormatada,
-    );
-
-
-    await insertCor(corDetectada);
     setState(() { _processando = false; });
     Navigator.pop(context, true);
   }
