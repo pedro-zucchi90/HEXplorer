@@ -3,7 +3,7 @@ class CorDetectadaModel {
   int? id;
   String nomeCor;
   String hexCor;
-  String caminhoFoto;
+  String imagemBase64;
   List<Map<String, String>> coresSignificativas; //lista de cores relacionadas (nome e hex)
   String? dataDetectada;
 
@@ -11,7 +11,7 @@ class CorDetectadaModel {
     this.id,
     required this.nomeCor,
     required this.hexCor,
-    required this.caminhoFoto,
+    required this.imagemBase64,
     required this.coresSignificativas,
     this.dataDetectada,
   });
@@ -36,7 +36,7 @@ class CorDetectadaModel {
       id: map['id'],
       nomeCor: map['nome_cor'],
       hexCor: map['hex_cor'],
-      caminhoFoto: map['caminho_foto'],
+      imagemBase64: map['imagem_base64'] ?? '',
       coresSignificativas: converterCoresSignificativas(map['cores_significativas']),
       dataDetectada: map['data_detectada'],
     );
@@ -47,7 +47,7 @@ class CorDetectadaModel {
     return {
       'nome_cor': nomeCor,
       'hex_cor': hexCor,
-      'caminho_foto': caminhoFoto,
+      'imagem_base64': imagemBase64,
       'cores_significativas': coresSignificativas.map((cor) => "${cor['nome']},${cor['hex']}").join(';'),
       'data_detectada': dataDetectada,
     };

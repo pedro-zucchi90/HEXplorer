@@ -40,6 +40,7 @@ dependencies:
   palette_generator: ^0.3.3
   google_fonts: ^6.2.1
   image_picker: ^1.1.2
+  converter: 0.4.0
 
 
   # The following adds the Cupertino Icons font to your application.

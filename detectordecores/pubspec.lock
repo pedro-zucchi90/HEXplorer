@@ -89,6 +89,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  converter:
+    dependency: "direct main"
+    description:
+      name: converter
+      sha256: "1b42661155ca89263fb01347961c2e6d35472f5727dca29b6ea058b65e39f9b5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   cross_file:
     dependency: transitive
     description:
@@ -113,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -288,6 +304,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+1"
+  invertible:
+    dependency: transitive
+    description:
+      name: invertible
+      sha256: "2e88300b67085adf5e766839a49e3a8da7db85d8826a9068bba24e015b79381a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   leak_tracker:
     dependency: transitive
     description:

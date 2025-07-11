@@ -7,6 +7,8 @@ import 'package:palette_generator/palette_generator.dart';
 import '../dao/cordao.dart';
 import '../model/cordetectadamodel.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:converter/converter.dart';
+import 'dart:convert';
 
 
 class TelaDeteccao extends StatefulWidget {
@@ -174,6 +176,8 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     await _initializeControllerFuture;
 
     final file = await _controller!.takePicture();
+    final imageBytes = await File(file.path).readAsBytes();
+    final imagemBase64 = base64Encode(imageBytes);
     final dadosImagem = await _processarImagem(file.path);
     _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
     final hex = dadosImagem['hex'];
@@ -184,7 +188,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     final corDetectada = CorDetectadaModel(
       nomeCor: nomePersonalizado ?? '',
       hexCor: hex,
-      caminhoFoto: caminhoFoto,
+      imagemBase64: imagemBase64,
       coresSignificativas: _coresSignificativas,
       dataDetectada: dataFormatada,
     );
@@ -205,6 +209,8 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
       return;
     }
 
+    final imageBytes = await File(pickedFile.path).readAsBytes();
+    final imagemBase64 = base64Encode(imageBytes);
     final dadosImagem = await _processarImagem(pickedFile.path);
     _coresSignificativas = List<Map<String, String>>.from(dadosImagem['coresSignificativas']);
     final hex = dadosImagem['hex'];
@@ -222,7 +228,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     final corDetectada = CorDetectadaModel(
       nomeCor: nomePersonalizado ?? '',
       hexCor: hex,
-      caminhoFoto: caminhoFoto,
+      imagemBase64: imagemBase64,
       coresSignificativas: _coresSignificativas,
       dataDetectada: dataFormatada,
     );

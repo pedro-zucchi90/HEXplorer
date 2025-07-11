@@ -23,7 +23,7 @@ Future<Database> getDatabase() async {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome_cor TEXT NOT NULL,
             hex_cor TEXT NOT NULL,
-            caminho_foto TEXT NOT NULL,
+            imagem_base64 TEXT NOT NULL,
             cores_significativas TEXT,
             data_detectada TEXT
           )
@@ -36,7 +36,7 @@ Future<Database> getDatabase() async {
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               nome_cor TEXT NOT NULL,
               hex_cor TEXT NOT NULL,
-              caminho_foto TEXT NOT NULL,
+              imagem_base64 TEXT NOT NULL,
               cores_significativas TEXT,
               data_detectada TEXT
             )

@@ -4,6 +4,7 @@ import 'package:testesqlite/dao/cordao.dart';
 import 'package:testesqlite/model/cordetectadamodel.dart';
 import 'screens/teladeteccao.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'screens/tela_detalhe_cor.dart';
 
 void main() async {
@@ -164,7 +165,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildFoto(cor.caminhoFoto),
+            _buildFoto(cor.imagemBase64),
             const SizedBox(height: 14),
             _buildInfoCor(cor),
             const SizedBox(height: 10),
@@ -176,12 +177,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   }
 
   //----- exibir a foto
-  Widget _buildFoto(String caminhoFoto) {
+  Widget _buildFoto(String imagemBase64) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
-      child: caminhoFoto.isNotEmpty
-          ? Image.file(
-              File(caminhoFoto),
+      child: imagemBase64.isNotEmpty
+          ? Image.memory(
+              base64Decode(imagemBase64),
               width: double.infinity,
               height: 180,
               fit: BoxFit.cover,
