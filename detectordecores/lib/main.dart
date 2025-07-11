@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:testesqlite/dao/cordao.dart';
 import 'package:testesqlite/model/cordetectadamodel.dart';
 import 'screens/teladeteccao.dart';
-import 'dart:convert';
 import 'dart:io'; // Import para File
 import 'screens/tela_detalhe_cor.dart';
+import 'package:flutter/services.dart'; // Import necessário para Clipboard
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -364,11 +364,19 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget _buildCoresSignificativas(List<Map<String, String>> cores) {
     return Wrap(
       spacing: 6,
-      children: cores.map((c) => Chip(
-        label: Text(c['hex'] ?? ''),
-        backgroundColor: Color(int.parse('FF${c['hex']!.substring(1)}', radix: 16)),
-        labelStyle: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold),
-        elevation: 2,
+      children: cores.map((c) => GestureDetector(
+        onTap: () {
+          Clipboard.setData(ClipboardData(text: c['hex'] ?? ''));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('HEX ${c['hex']} copiado!')),
+          );
+        },
+        child: Chip(
+          label: Text(c['hex'] ?? ''),
+          backgroundColor: Color(int.parse('FF${c['hex']!.substring(1)}', radix: 16)),
+          labelStyle: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold),
+          elevation: 2,
+        ),
       )).toList(),
     );
   }
