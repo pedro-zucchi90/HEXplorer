@@ -304,6 +304,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 builder: (_) => TelaDetalheCor(
                   corPrincipal: corPrincipal,
                   hexCor: cor.hexCor,
+                  imagemPath: cor.imagemPath,
                 ),
               ),
             );
@@ -348,12 +349,47 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget _buildFAB() {
     return FloatingActionButton(
       onPressed: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const TelaDeteccao()),
+        final modo = await showModalBottomSheet<String>(
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Câmera Normal'),
+                  onTap: () => Navigator.pop(context, 'normal'),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.visibility),
+                  title: const Text('Protanopia'),
+                  onTap: () => Navigator.pop(context, 'protanopia'),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.visibility),
+                  title: const Text('Deuteranopia'),
+                  onTap: () => Navigator.pop(context, 'deuteranopia'),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.visibility),
+                  title: const Text('Tritanopia'),
+                  onTap: () => Navigator.pop(context, 'tritanopia'),
+                ),
+              ],
+            );
+          },
         );
-        if (result == true) {
-          await _refresh();
+        if (modo != null) {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TelaDeteccao(modoDaltonismo: modo)),
+          );
+          if (result == true) {
+            await _refresh();
+          }
         }
       },
       child: const Icon(Icons.camera_alt, size: 32),

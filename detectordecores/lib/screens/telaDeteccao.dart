@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -11,7 +12,8 @@ import 'dart:convert';
 
 
 class TelaDeteccao extends StatefulWidget {
-  const TelaDeteccao({Key? key}) : super(key: key);
+  final String? modoDaltonismo;
+  const TelaDeteccao({Key? key, this.modoDaltonismo}) : super(key: key);
 
   @override
   State<TelaDeteccao> createState() => _TelaDeteccaoState();
@@ -23,6 +25,32 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
   List<Map<String, String>> _coresSignificativas = [];
   bool _processando = false;
   String? _erroCamera;
+
+  // Variáveis para detecção de objetos
+  bool _detectando = false;
+  List<dynamic>? _objetosDetectados;
+
+  // Matrizes de simulação de daltonismo (fonte: color_blindness e ChatGPT XD)
+  final List<double> _protanopiaMatrix = [
+    0.567, 0.433, 0.0,   0, 0,
+    0.558, 0.442, 0.0,   0, 0,
+    0.0,   0.242, 0.758, 0, 0,
+    0,     0,     0,     1, 0,
+  ];
+
+  final List<double> _deuteranopiaMatrix = [
+    0.625, 0.375, 0.0,   0, 0,
+    0.7,   0.3,   0.0,   0, 0,
+    0.0,   0.3,   0.7,   0, 0,
+    0,     0,     0,     1, 0,
+  ];
+
+  final List<double> _tritanopiaMatrix = [
+    0.95,  0.05,  0.0,   0, 0,
+    0.0,   0.433, 0.567, 0, 0,
+    0.0,   0.475, 0.525, 0, 0,
+    0,     0,     0,     1, 0,
+  ];
 
   @override
   void initState() {
@@ -68,6 +96,27 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     super.dispose();
   }
 
+  // Função para processar frames em tempo real
+  void _iniciarDeteccao() {
+    if (_controller != null && !_detectando) {
+      _detectando = true;
+      _controller!.startImageStream((CameraImage image) async {
+        if (!_detectando) return;
+        
+        setState(() {
+          _objetosDetectados = null;
+        });
+      });
+    }
+  }
+
+  void _pararDeteccao() {
+    if (_controller != null && _detectando) {
+      _controller!.stopImageStream();
+      _detectando = false;
+    }
+  }
+
   // ------ funções utilitárias e helpers (utilitários = Algo mais geral/genérico; Helpers = Algo mais específico)
   
   //calcula a saturação de uma cor
@@ -88,6 +137,34 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     final l = (maxVal + minVal) / 2.0;
     final d = maxVal - minVal;
     return l > 0.5 ? d / (2.0 - maxVal - minVal) : d / (maxVal + minVal);
+  }
+
+  // Função para aplicar filtro de daltonismo na imagem
+  img.Image aplicarFiltroDaltonismo(img.Image src, List<double> matrix) {
+    for (int y = 0; y < src.height; y++) {
+      for (int x = 0; x < src.width; x++) {
+        var pixel = src.getPixel(x, y);
+        int r = pixel.r.toInt();
+        int g = pixel.g.toInt();
+        int b = pixel.b.toInt();
+        int a = pixel.a.toInt();
+
+        // Matriz 4x5
+        double nr = (matrix[0] * r) + (matrix[1] * g) + (matrix[2] * b) + (matrix[3] * a) + matrix[4];
+        double ng = (matrix[5] * r) + (matrix[6] * g) + (matrix[7] * b) + (matrix[8] * a) + matrix[9];
+        double nb = (matrix[10] * r) + (matrix[11] * g) + (matrix[12] * b) + (matrix[13] * a) + matrix[14];
+        double na = (matrix[15] * r) + (matrix[16] * g) + (matrix[17] * b) + (matrix[18] * a) + matrix[19];
+
+        src.setPixelRgba(
+          x, y,
+          nr.clamp(0, 255).toInt(),
+          ng.clamp(0, 255).toInt(),
+          nb.clamp(0, 255).toInt(),
+          na.clamp(0, 255).toInt(),
+        );
+      }
+    }
+    return src;
   }
 
 
@@ -155,7 +232,22 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
   Future<String> _salvarFoto(String origemPath) async {
     final dir = await getApplicationDocumentsDirectory();
     final caminhoFoto = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-    await File(origemPath).copy(caminhoFoto);
+
+    // Carrega a imagem
+    final imageBytes = await File(origemPath).readAsBytes();
+    img.Image? image = img.decodeImage(imageBytes);
+
+    // Aplica o filtro se necessário
+    if (widget.modoDaltonismo == 'protanopia') {
+      image = aplicarFiltroDaltonismo(image!, _protanopiaMatrix);
+    } else if (widget.modoDaltonismo == 'deuteranopia') {
+      image = aplicarFiltroDaltonismo(image!, _deuteranopiaMatrix);
+    } else if (widget.modoDaltonismo == 'tritanopia') {
+      image = aplicarFiltroDaltonismo(image!, _tritanopiaMatrix);
+    }
+
+    // Salva a imagem (com ou sem filtro)
+    await File(caminhoFoto).writeAsBytes(img.encodeJpg(image!));
     return caminhoFoto;
   }
 
@@ -164,7 +256,6 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     final dataHora = DateTime.now();
     return '${dataHora.day.toString().padLeft(2, '0')}/${dataHora.month.toString().padLeft(2, '0')}/${dataHora.year} ${dataHora.hour.toString().padLeft(2, '0')}:${dataHora.minute.toString().padLeft(2, '0')}';
   }
-
 
 
   //--------------- fluxo principal
@@ -260,9 +351,35 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
                     if (_controller == null || !_controller!.value.isInitialized) {
                       return const Center(child: Text('Câmera não inicializada', style: TextStyle(color: Colors.white)));
                     }
+                    // Inicia a detecção ao exibir a tela
+                    _iniciarDeteccao();
                     return Stack(
                       children: [
-                        CameraPreview(_controller!),
+                        _buildCameraPreviewComFiltro(),
+                        if (_objetosDetectados != null)
+                          ..._objetosDetectados!.map((obj) {
+                            if (obj == null || obj['rect'] == null) return Container();
+                            final rect = obj['rect'];
+                            return Positioned(
+                              left: rect['x'] * MediaQuery.of(context).size.width,
+                              top: rect['y'] * MediaQuery.of(context).size.height,
+                              width: rect['w'] * MediaQuery.of(context).size.width,
+                              height: rect['h'] * MediaQuery.of(context).size.height,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.red, width: 2),
+                                ),
+                                child: Text(
+                                  obj['detectedClass'] ?? '',
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    backgroundColor: Colors.white70,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                       ],
                     );
                   },
@@ -316,5 +433,26 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  Widget _buildCameraPreviewComFiltro() {
+    if (widget.modoDaltonismo == 'protanopia') {
+      return ColorFiltered(
+        colorFilter: ColorFilter.matrix(_protanopiaMatrix),
+        child: CameraPreview(_controller!),
+      );
+    } else if (widget.modoDaltonismo == 'deuteranopia') {
+      return ColorFiltered(
+        colorFilter: ColorFilter.matrix(_deuteranopiaMatrix),
+        child: CameraPreview(_controller!),
+      );
+    } else if (widget.modoDaltonismo == 'tritanopia') {
+      return ColorFiltered(
+        colorFilter: ColorFilter.matrix(_tritanopiaMatrix),
+        child: CameraPreview(_controller!),
+      );
+    } else {
+      return CameraPreview(_controller!);
+    }
   }
 }

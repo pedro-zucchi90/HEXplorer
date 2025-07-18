@@ -34,14 +34,15 @@ dependencies:
   sqflite: ^2.4.1
   path: ^1.8.3
   sqflite_common_ffi: ^2.3.5
-  camera: ^0.11.1
+  camera: ^0.10.5+9
   image: ^4.1.7
-  path_provider: ^2.1.2
+  path_provider: ^2.0.15
   palette_generator: ^0.3.3
   google_fonts: ^6.2.1
   image_picker: ^1.1.2
   converter: 0.4.0
   share_plus: ^7.0.0
+  color_blindness: ^0.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
