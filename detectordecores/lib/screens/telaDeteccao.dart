@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -30,31 +31,42 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
   bool _detectando = false;
   List<dynamic>? _objetosDetectados;
 
-  // Matrizes de simulação de daltonismo (fonte: color_blindness e ChatGPT XD)
+  // Matrizes de simulação de daltonismo (ajustadas conforme espectro da imagem)
   final List<double> _protanopiaMatrix = [
-    0.567, 0.433, 0.0,   0, 0,
-    0.558, 0.442, 0.0,   0, 0,
-    0.0,   0.242, 0.758, 0, 0,
-    0,     0,     0,     1, 0,
+    0.20, 0.80, 0.00, 0, 0,
+    0.20, 0.80, 0.00, 0, 0,
+    0.00, 0.20, 0.80, 0, 0,
+    0,    0,    0,    1, 0,
   ];
 
   final List<double> _deuteranopiaMatrix = [
-    0.625, 0.375, 0.0,   0, 0,
-    0.7,   0.3,   0.0,   0, 0,
-    0.0,   0.3,   0.7,   0, 0,
-    0,     0,     0,     1, 0,
+    0.80, 0.20, 0.00, 0, 0,
+    0.80, 0.20, 0.00, 0, 0,
+    0.00, 0.20, 0.80, 0, 0,
+    0,    0,    0,    1, 0,
   ];
 
   final List<double> _tritanopiaMatrix = [
-    0.95,  0.05,  0.0,   0, 0,
-    0.0,   0.433, 0.567, 0, 0,
-    0.0,   0.475, 0.525, 0, 0,
+    0.95, 0.05, 0.00, 0, 0,
+    0.00, 0.43, 0.57, 0, 0,
+    0.00, 0.47, 0.53, 0, 0,
+    0,    0,    0,    1, 0,
+  ];
+
+  final List<double> _achromatopsiaMatrix = [
+    0.299, 0.587, 0.114, 0, 0,
+    0.299, 0.587, 0.114, 0, 0,
+    0.299, 0.587, 0.114, 0, 0,
     0,     0,     0,     1, 0,
   ];
+
+  // NOVO: tipo de daltonismo selecionado em tempo real
+  late String _tipoDaltonismoAtual;
 
   @override
   void initState() {
     super.initState();
+    _tipoDaltonismoAtual = widget.modoDaltonismo ?? '';
     _initializeControllerFuture = _initCamera();
   }
 
@@ -238,12 +250,14 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     img.Image? image = img.decodeImage(imageBytes);
 
     // Aplica o filtro se necessário
-    if (widget.modoDaltonismo == 'protanopia') {
+    if (_tipoDaltonismoAtual == 'protanopia') {
       image = aplicarFiltroDaltonismo(image!, _protanopiaMatrix);
-    } else if (widget.modoDaltonismo == 'deuteranopia') {
+    } else if (_tipoDaltonismoAtual == 'deuteranopia') {
       image = aplicarFiltroDaltonismo(image!, _deuteranopiaMatrix);
-    } else if (widget.modoDaltonismo == 'tritanopia') {
+    } else if (_tipoDaltonismoAtual == 'tritanopia') {
       image = aplicarFiltroDaltonismo(image!, _tritanopiaMatrix);
+    } else if (_tipoDaltonismoAtual == 'achromatopsia') {
+      image = aplicarFiltroDaltonismo(image!, _achromatopsiaMatrix);
     }
 
     // Salva a imagem (com ou sem filtro)
@@ -346,7 +360,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
                       return const Center(child: CircularProgressIndicator(color: Colors.white70));
                     }
                     if (snapshot.hasError) {
-                      return Center(child: Text('Erro ao carregar câmera: ${snapshot.error}', style: TextStyle(color: Colors.red)));
+                      return Center(child: Text('Erro ao carregar câmera:  ${snapshot.error}', style: TextStyle(color: Colors.red)));
                     }
                     if (_controller == null || !_controller!.value.isInitialized) {
                       return const Center(child: Text('Câmera não inicializada', style: TextStyle(color: Colors.white)));
@@ -436,19 +450,24 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
   }
 
   Widget _buildCameraPreviewComFiltro() {
-    if (widget.modoDaltonismo == 'protanopia') {
+    if (_tipoDaltonismoAtual == 'protanopia') {
       return ColorFiltered(
         colorFilter: ColorFilter.matrix(_protanopiaMatrix),
         child: CameraPreview(_controller!),
       );
-    } else if (widget.modoDaltonismo == 'deuteranopia') {
+    } else if (_tipoDaltonismoAtual == 'deuteranopia') {
       return ColorFiltered(
         colorFilter: ColorFilter.matrix(_deuteranopiaMatrix),
         child: CameraPreview(_controller!),
       );
-    } else if (widget.modoDaltonismo == 'tritanopia') {
+    } else if (_tipoDaltonismoAtual == 'tritanopia') {
       return ColorFiltered(
         colorFilter: ColorFilter.matrix(_tritanopiaMatrix),
+        child: CameraPreview(_controller!),
+      );
+    } else if (_tipoDaltonismoAtual == 'achromatopsia') {
+      return ColorFiltered(
+        colorFilter: ColorFilter.matrix(_achromatopsiaMatrix),
         child: CameraPreview(_controller!),
       );
     } else {

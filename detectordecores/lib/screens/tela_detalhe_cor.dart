@@ -4,10 +4,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:color_blindness/color_blindness.dart';
-import 'telaSimulacaoDaltonismoFoto.dart';
+import 'TelaSimulacaoDaltonismoFoto.dart';
 
-class TelaDetalheCor extends StatelessWidget {
+class TelaDetalheCor extends StatefulWidget {
   final Color corPrincipal;
   final String hexCor;
   final String? imagemPath;
@@ -20,12 +19,166 @@ class TelaDetalheCor extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<TelaDetalheCor> createState() => _TelaDetalheCorState();
+}
+
+class _TelaDetalheCorState extends State<TelaDetalheCor> {
+
+
+
+  String get significadoCor {
+    return _getSignificadoPorHSL(widget.corPrincipal);
+  }
+
+  String _getSignificadoPorHSL(Color cor) {
+    final hsl = HSLColor.fromColor(cor);
+    final hue = hsl.hue;
+    final saturation = hsl.saturation;
+    final lightness = hsl.lightness;
+    
+    // Cores muito escuras (pretos e cinzas escuros)
+    if (lightness < 0.15) {
+      if (saturation < 0.1) return 'Poder absoluto, elegância sofisticada, mistério profundo, luto respeitoso.';
+      if (saturation < 0.3) return 'Poder discreto, elegância refinada, mistério sutil, sofisticação.';
+      return 'Poder intenso, elegância dramática, mistério envolvente, autoridade.';
+    }
+    
+    // Cores muito claras (brancos e tons pastéis muito claros)
+    if (lightness > 0.85) {
+      if (saturation < 0.1) return 'Pureza absoluta, paz interior, inocência celestial, simplicidade divina.';
+      if (saturation < 0.3) return 'Pureza suave, paz tranquila, inocência delicada, simplicidade elegante.';
+      return 'Pureza luminosa, paz serena, inocência radiante, simplicidade refinada.';
+    }
+    
+    // Cores com saturação muito baixa (tons neutros)
+    if (saturation < 0.15) {
+      if (lightness < 0.4) return 'Neutralidade profunda, equilíbrio interior, indecisão contemplativa, formalidade elegante.';
+      if (lightness < 0.7) return 'Neutralidade equilibrada, equilíbrio harmonioso, indecisão ponderada, formalidade discreta.';
+      return 'Neutralidade suave, equilíbrio delicado, indecisão serena, formalidade refinada.';
+    }
+    
+    // VERMELHOS (0-30°)
+    if (hue >= 0 && hue < 30) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Paixão suave e introspectiva, ternura profunda, carinho maternal, amor discreto.';
+        return 'Paixão delicada e romântica, ternura gentil, carinho infantil, amor puro.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Energia moderada e focada, paixão determinada, coragem interior, amor sincero.';
+        return 'Energia equilibrada e calorosa, paixão romântica, entusiasmo contido, amor verdadeiro.';
+      } else {
+        if (lightness < 0.5) return 'Energia intensa e poderosa, paixão ardente e irresistível, ação decisiva, amor profundo e apaixonado.';
+        return 'Energia vibrante e exuberante, paixão ardente e contagiante, ação dinâmica, amor intenso e romântico.';
+      }
+    }
+    
+    // LARANJAS (30-60°)
+    if (hue >= 30 && hue < 60) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Alegria suave e acolhedora, criatividade introspectiva, otimismo discreto, calor humano.';
+        return 'Alegria delicada e radiante, criatividade gentil, otimismo puro, calor maternal.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Alegria equilibrada e confiante, criatividade focada, otimismo realista, entusiasmo moderado.';
+        return 'Alegria harmoniosa e contagiante, criatividade inspiradora, otimismo genuíno, entusiasmo sincero.';
+      } else {
+        if (lightness < 0.5) return 'Alegria exuberante e energética, criatividade vibrante e inovadora, otimismo contagiante, entusiasmo irresistível.';
+        return 'Alegria radiante e luminosa, criatividade vibrante e expressiva, otimismo exuberante, entusiasmo contagiante.';
+      }
+    }
+    
+    // AMARELOS (60-90°)
+    if (hue >= 60 && hue < 90) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Alegria suave e intelectual, criatividade contemplativa, atenção sutil, energia mental.';
+        return 'Alegria delicada e luminosa, criatividade gentil, atenção pura, energia espiritual.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Alegria equilibrada e focada, criatividade produtiva, atenção concentrada, energia vital.';
+        return 'Alegria harmoniosa e inspiradora, criatividade expressiva, atenção genuína, energia positiva.';
+      } else {
+        if (lightness < 0.5) return 'Alegria vibrante e energética, criatividade inovadora e dinâmica, atenção irresistível, energia contagiante.';
+        return 'Alegria radiante e luminosa, criatividade vibrante e expressiva, atenção magnética, energia exuberante.';
+      }
+    }
+    
+    // VERDES (90-150°)
+    if (hue >= 90 && hue < 150) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Natureza suave e contemplativa, tranquilidade profunda, paz interior, crescimento sutil.';
+        return 'Natureza delicada e serena, tranquilidade celestial, paz pura, crescimento gentil.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Natureza equilibrada e estável, tranquilidade confiante, paz harmoniosa, crescimento constante.';
+        return 'Natureza harmoniosa e vital, tranquilidade serena, paz genuína, crescimento saudável.';
+      } else {
+        if (lightness < 0.5) return 'Natureza vibrante e vigorosa, saúde robusta, crescimento vigoroso e dinâmico, esperança inabalável.';
+        return 'Natureza radiante e exuberante, saúde vibrante, crescimento vigoroso e contagiante, esperança luminosa.';
+      }
+    }
+    
+    // AZUIS (150-210°)
+    if (hue >= 150 && hue < 210) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Calma profunda e contemplativa, serenidade interior, conforto espiritual, estabilidade emocional.';
+        return 'Calma delicada e celestial, serenidade pura, conforto maternal, estabilidade gentil.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Calma confiante e estável, serenidade equilibrada, conforto seguro, estabilidade sólida.';
+        return 'Calma harmoniosa e serena, serenidade genuína, conforto acolhedor, estabilidade tranquila.';
+      } else {
+        if (lightness < 0.5) return 'Calma profunda e absoluta, confiança inabalável, estabilidade inquebrantável, serenidade suprema.';
+        return 'Calma radiante e luminosa, confiança absoluta, estabilidade perfeita, serenidade celestial.';
+      }
+    }
+    
+    // ROXOS/VIOLETAS (210-270°)
+    if (hue >= 210 && hue < 270) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Espiritualidade suave e introspectiva, intuição sutil, mistério discreto, criatividade contemplativa.';
+        return 'Espiritualidade delicada e celestial, intuição pura, mistério gentil, criatividade espiritual.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Espiritualidade equilibrada e focada, mistério harmonioso, criatividade produtiva, nobreza discreta.';
+        return 'Espiritualidade harmoniosa e inspiradora, mistério sereno, criatividade expressiva, nobreza genuína.';
+      } else {
+        if (lightness < 0.5) return 'Espiritualidade intensa e profunda, mistério envolvente e hipnótico, criatividade inovadora, nobreza majestosa.';
+        return 'Espiritualidade radiante e luminosa, mistério fascinante, criatividade vibrante, nobreza celestial.';
+      }
+    }
+    
+    // MAGENTAS/ROSAS (270-330°)
+    if (hue >= 270 && hue < 330) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Romance suave e introspectivo, ternura profunda, carinho maternal, feminilidade discreta.';
+        return 'Romance delicado e celestial, ternura pura, carinho infantil, feminilidade gentil.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Romance equilibrado e sincero, ternura harmoniosa, carinho genuíno, feminilidade elegante.';
+        return 'Romance harmonioso e inspirador, ternura serena, carinho acolhedor, feminilidade refinada.';
+      } else {
+        if (lightness < 0.5) return 'Romance intenso e apaixonado, ternura profunda e envolvente, carinho maternal, feminilidade majestosa.';
+        return 'Romance radiante e luminoso, ternura vibrante, carinho contagiante, feminilidade celestial.';
+      }
+    }
+    
+    // VERMELHOS-MAGENTA (330-360°)
+    if (hue >= 330 && hue < 360) {
+      if (saturation < 0.4) {
+        if (lightness < 0.5) return 'Paixão suave e romântica, amor discreto, carinho maternal, energia sutil.';
+        return 'Paixão delicada e pura, amor celestial, carinho infantil, energia gentil.';
+      } else if (saturation < 0.7) {
+        if (lightness < 0.5) return 'Paixão equilibrada e sincera, amor verdadeiro, carinho genuíno, energia harmoniosa.';
+        return 'Paixão harmoniosa e inspiradora, amor sereno, carinho acolhedor, energia positiva.';
+      } else {
+        if (lightness < 0.5) return 'Paixão ardente e irresistível, energia intensa e dinâmica, ação decisiva, amor profundo e apaixonado.';
+        return 'Paixão radiante e luminosa, energia vibrante e contagiante, ação dinâmica, amor intenso e romântico.';
+      }
+    }
+    
+    return 'Cor única com características especiais e distintivas.';
+  }
+
+  @override
   Widget build(BuildContext context) {
     // obtem a representação RGB da cor principal para exibição
-    final rgb = 'RGB(${corPrincipal.r}, ${corPrincipal.g}, ${corPrincipal.b})';
+    final rgb = 'RGB(${widget.corPrincipal.r}, ${widget.corPrincipal.g}, ${widget.corPrincipal.b})';
 
     // Converte a cor principal para o modelo HSL para facilitar manipulações
-    final hsl = HSLColor.fromColor(corPrincipal);
+    final hsl = HSLColor.fromColor(widget.corPrincipal);
 
     //cores complementares: são cores opostas no círculo cromático
     //calcula a complementar (180°) e duas variações próximas (150° e 210°)
@@ -49,7 +202,7 @@ class TelaDetalheCor extends StatelessWidget {
 
     //inclui a cor principal, duas análogas e um tom mais claro da cor principal.
     final paletaSugerida = [
-      corPrincipal,
+      widget.corPrincipal,
       corAn1, // +30°
       corAn2, // -30°
       hsl.withLightness((hsl.lightness + 0.25).clamp(0.0, 1.0)).toColor(), // tom mais claro
@@ -64,11 +217,11 @@ class TelaDetalheCor extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _blocoCor(context, "Cor Principal", corPrincipal, hexCor),
+          _blocoCor(context, "Cor Principal", widget.corPrincipal, widget.hexCor),
           const SizedBox(height: 16),
-          _exemploContraste(corPrincipal),
+          _exemploContraste(widget.corPrincipal),
           const SizedBox(height: 16),
-          SimulacaoDaltonismoBloco(corPrincipal: corPrincipal, imagemPath: imagemPath),
+          SimulacaoDaltonismoBloco(corPrincipal: widget.corPrincipal, imagemPath: widget.imagemPath),
           const SizedBox(height: 16),
           _blocoCores(context, "Tons", tons),
           _blocoCores(context, "Paleta Sugerida", paletaSugerida),
@@ -89,19 +242,20 @@ class TelaDetalheCor extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  titulo,
-                  style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ],
+            Text(
+              titulo,
+              style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 10),
             Container(
               height: 80,
               decoration: BoxDecoration(color: cor, borderRadius: BorderRadius.circular(10)),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              significadoCor,
+              style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 12, fontStyle: FontStyle.italic),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             Row(
@@ -119,7 +273,6 @@ class TelaDetalheCor extends StatelessWidget {
                 ),
               ],
             ),
-            // Removido o Text(rgb, ...)
           ],
         ),
       ),
@@ -233,19 +386,24 @@ class _SimulacaoDaltonismoBlocoState extends State<SimulacaoDaltonismoBloco> {
 
   static const Map<String, List<List<double>>> matrizes = {
     'protanopia': [
-      [0.567, 0.433, 0.000],
-      [0.558, 0.442, 0.000],
-      [0.000, 0.242, 0.758],
+      [0.20, 0.80, 0.00],
+      [0.20, 0.80, 0.00],
+      [0.00, 0.20, 0.80],
     ],
     'deuteranopia': [
-      [0.625, 0.375, 0.000],
-      [0.700, 0.300, 0.000],
-      [0.000, 0.300, 0.700],
+      [0.80, 0.20, 0.00],
+      [0.80, 0.20, 0.00],
+      [0.00, 0.20, 0.80],
     ],
     'tritanopia': [
-      [0.950, 0.050, 0.000],
-      [0.000, 0.433, 0.567],
-      [0.000, 0.475, 0.525],
+      [0.95, 0.05, 0.00],
+      [0.00, 0.43, 0.57],
+      [0.00, 0.47, 0.53],
+    ],
+    'achromatopsia': [
+      [0.299, 0.587, 0.114],
+      [0.299, 0.587, 0.114],
+      [0.299, 0.587, 0.114],
     ],
   };
 
@@ -347,18 +505,28 @@ class _SimulacaoDaltonismoBlocoState extends State<SimulacaoDaltonismoBloco> {
                     minimumSize: const Size.fromHeight(40),
                   ),
                 ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () => setState(() => tipoDaltonismo = 'achromatopsia'),
+                  child: const Text('Achromatopsia'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tipoDaltonismo == 'achromatopsia' ? corSelecionado : Colors.grey.shade800,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(40),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    // Aqui você pode obter o caminho da imagem associada à cor, se existir
-                    // Exemplo: supondo que você tenha o caminho salvo em widget.imagemPath
-                    // Substitua pelo caminho correto se necessário
                     final imagemPath = widget.imagemPath;
                     if (imagemPath != null && imagemPath.isNotEmpty) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => TelaSimulacaoDaltonismoFoto(imagem: File(imagemPath)),
+                          builder: (_) => TelaSimulacaoDaltonismoFoto(
+                            imagem: File(imagemPath),
+                            tipoDaltonismo: tipoDaltonismo,
+                          ),
                         ),
                       );
                     } else {

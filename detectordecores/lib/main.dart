@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:testesqlite/dao/cordao.dart';
 import 'package:testesqlite/model/cordetectadamodel.dart';
 import 'screens/teladeteccao.dart';
+import 'screens/splash_screen.dart';
 import 'dart:io'; // Import para File
 import 'screens/tela_detalhe_cor.dart';
 import 'package:flutter/services.dart'; // Import necessário para Clipboard
@@ -20,7 +21,7 @@ class HexplorerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
-      home: const TelaPrincipal(),
+      home: const SplashScreen(),
     );
   }
 
@@ -361,7 +362,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
                   title: const Text('Câmera Normal'),
-                  onTap: () => Navigator.pop(context, 'normal'),
+                  onTap: () => Navigator.pop(context, ''),
                 ),
                 ListTile(
                   leading: const Icon(Icons.visibility),
@@ -377,6 +378,11 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   leading: const Icon(Icons.visibility),
                   title: const Text('Tritanopia'),
                   onTap: () => Navigator.pop(context, 'tritanopia'),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.visibility_off),
+                  title: const Text('Achromatopsia'),
+                  onTap: () => Navigator.pop(context, 'achromatopsia'),
                 ),
               ],
             );
