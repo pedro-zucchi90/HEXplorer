@@ -1,7 +1,7 @@
 # HEXplorer - Detector de Cores Inteligente
 
 <div align="center">
-  <img src="assets/img/logoHEXplorer.png" alt="HEXplorer Logo" width="120" height="120">
+  <img src="detectordecores/assets/img/logoHEXplorer.png" alt="HEXplorer Logo" width="120" height="120">
   
   <h1>HEXplorer</h1>
   <p><strong>Transforme o mundo real em paletas de cores profissionais</strong></p>
