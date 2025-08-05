@@ -110,9 +110,8 @@ detectordecores/
 │   └── database/                 # Configuração do banco
 │       └── db.dart               # Configuração SQLite
 ├── assets/                       # Recursos estáticos
-│   ├── img/                      # Imagens
-│   │   └── logoHEXplorer.png     # Logo do app
-│   └── modelos/                  # Modelos (se houver)
+│   └── img/                      # Imagens
+│        └── logoHEXplorer.png     # Logo do app
 ├── android/                      # Configurações Android
 ├── ios/                          # Configurações iOS
 ├── web/                          # Configurações Web
