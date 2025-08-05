@@ -27,9 +27,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
   bool _processando = false;
   String? _erroCamera;
 
-  // Variáveis para detecção de objetos
-  bool _detectando = false;
-  List<dynamic>? _objetosDetectados;
+
 
   // Matrizes de simulação de daltonismo (ajustadas conforme espectro da imagem)
   final List<double> _protanopiaMatrix = [
@@ -108,26 +106,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
     super.dispose();
   }
 
-  // Função para processar frames em tempo real
-  void _iniciarDeteccao() {
-    if (_controller != null && !_detectando) {
-      _detectando = true;
-      _controller!.startImageStream((CameraImage image) async {
-        if (!_detectando) return;
-        
-        setState(() {
-          _objetosDetectados = null;
-        });
-      });
-    }
-  }
 
-  void _pararDeteccao() {
-    if (_controller != null && _detectando) {
-      _controller!.stopImageStream();
-      _detectando = false;
-    }
-  }
 
   // ------ funções utilitárias e helpers (utilitários = Algo mais geral/genérico; Helpers = Algo mais específico)
   
@@ -365,37 +344,7 @@ class _TelaDeteccaoState extends State<TelaDeteccao> {
                     if (_controller == null || !_controller!.value.isInitialized) {
                       return const Center(child: Text('Câmera não inicializada', style: TextStyle(color: Colors.white)));
                     }
-                    // Inicia a detecção ao exibir a tela
-                    _iniciarDeteccao();
-                    return Stack(
-                      children: [
-                        _buildCameraPreviewComFiltro(),
-                        if (_objetosDetectados != null)
-                          ..._objetosDetectados!.map((obj) {
-                            if (obj == null || obj['rect'] == null) return Container();
-                            final rect = obj['rect'];
-                            return Positioned(
-                              left: rect['x'] * MediaQuery.of(context).size.width,
-                              top: rect['y'] * MediaQuery.of(context).size.height,
-                              width: rect['w'] * MediaQuery.of(context).size.width,
-                              height: rect['h'] * MediaQuery.of(context).size.height,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.red, width: 2),
-                                ),
-                                child: Text(
-                                  obj['detectedClass'] ?? '',
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                    backgroundColor: Colors.white70,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                      ],
-                    );
+                    return _buildCameraPreviewComFiltro();
                   },
                 ),
 
