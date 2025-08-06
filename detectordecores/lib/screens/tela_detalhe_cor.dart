@@ -24,7 +24,21 @@ class TelaDetalheCor extends StatefulWidget {
 
 class _TelaDetalheCorState extends State<TelaDetalheCor> {
 
+  // Função para calcular saturação de forma consistente com a tela de detecção
+  double _saturacao(Color color) {
+    final r = color.r / 255.0;
+    final g = color.g / 255.0;
+    final b = color.b / 255.0;
 
+    final maxVal = [r, g, b].reduce((a, b) => a > b ? a : b);
+    final minVal = [r, g, b].reduce((a, b) => a < b ? a : b);
+
+    if (maxVal == minVal) return 0.0;
+
+    final l = (maxVal + minVal) / 2.0;
+    final d = maxVal - minVal;
+    return l > 0.5 ? d / (2.0 - maxVal - minVal) : d / (maxVal + minVal);
+  }
 
   String get significadoCor {
     return _getSignificadoPorHSL(widget.corPrincipal);
@@ -33,7 +47,7 @@ class _TelaDetalheCorState extends State<TelaDetalheCor> {
   String _getSignificadoPorHSL(Color cor) {
     final hsl = HSLColor.fromColor(cor);
     final hue = hsl.hue;
-    final saturation = hsl.saturation;
+    final saturation = _saturacao(cor); // Usa a função personalizada
     final lightness = hsl.lightness;
     
     // Cores muito escuras (pretos e cinzas escuros)
