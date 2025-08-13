@@ -66,124 +66,175 @@ class _TelaDetalheCorState extends State<TelaDetalheCor> {
     return 'Pureza luminosa, paz serena, inocência radiante, simplicidade refinada.';
   }
 
-  // Matiz por faixa de cor
-  if (hue >= 0 && hue < 30) { // VERMELHOS
+  // Matiz por 12 faixas de cor (cada uma com 30 graus)
+  if (hue >= 0 && hue < 30) { // VERMELHO
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Vermelho escuro e pouco saturado: transmite introspecção, elegância reservada e uma paixão contida, quase misteriosa.'
-          : 'Vermelho claro e pouco saturado: sugere romantismo delicado, ternura e uma energia emocional suave e acolhedora.';
+          ? 'Vermelho escuro e pouco saturado: introspecção, elegância reservada e paixão contida.'
+          : 'Vermelho claro e pouco saturado: romantismo delicado, ternura e energia emocional suave.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Vermelho moderado: representa energia focada, força interior, coragem e determinação sem excessos.'
-          : 'Vermelho vibrante: expressa calor humano, entusiasmo, vitalidade e uma paixão equilibrada e positiva.';
+          ? 'Vermelho moderado: energia focada, força interior e coragem.'
+          : 'Vermelho vibrante: calor humano, entusiasmo e vitalidade.';
     }
     return lightness < 0.5
-        ? 'Vermelho intenso e escuro: simboliza poder, desejo profundo, intensidade emocional e liderança marcante.'
-        : 'Vermelho intenso e claro: reflete paixão vibrante, dinamismo, ousadia e uma energia contagiante.';
+        ? 'Vermelho intenso e escuro: poder, desejo profundo e liderança.'
+        : 'Vermelho intenso e claro: paixão vibrante, dinamismo e ousadia.';
   } else if (hue >= 30 && hue < 60) { // LARANJA
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Laranja discreto e escuro: inspira criatividade reservada, aconchego sutil e entusiasmo moderado.'
-          : 'Laranja claro e suave: transmite alegria tranquila, otimismo leve e motivação gentil.';
+          ? 'Laranja escuro e discreto: criatividade reservada e aconchego sutil.'
+          : 'Laranja claro e suave: alegria tranquila e otimismo leve.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Laranja moderado: sugere sociabilidade equilibrada, dinamismo positivo e energia acolhedora.'
-          : 'Laranja vibrante: expressa vitalidade, entusiasmo, criatividade e otimismo radiante.';
+          ? 'Laranja moderado: sociabilidade equilibrada e dinamismo positivo.'
+          : 'Laranja vibrante: vitalidade, entusiasmo e criatividade.';
     }
     return lightness < 0.5
-        ? 'Laranja intenso e escuro: representa inspiração poderosa, motivação forte e energia transformadora.'
-        : 'Laranja intenso e claro: simboliza alegria contagiante, criatividade exuberante e entusiasmo expansivo.';
-        
-  } else if (hue >= 60 && hue < 90) { // AMARELOS
+        ? 'Laranja intenso e escuro: inspiração poderosa e energia transformadora.'
+        : 'Laranja intenso e claro: alegria contagiante e criatividade exuberante.';
+  } else if (hue >= 60 && hue < 90) { // AMARELO-OURO
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Amarelo escuro e suave: evoca otimismo discreto, clareza interior e reflexão positiva.'
-          : 'Amarelo claro e suave: transmite leveza mental, alegria delicada e inspiração serena.';
+          ? 'Amarelo-ouro escuro e suave: otimismo discreto e reflexão positiva.'
+          : 'Amarelo-ouro claro e suave: leveza mental e alegria delicada.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Amarelo moderado: sugere criatividade focada, energia equilibrada e pensamento claro.'
-          : 'Amarelo vibrante: expressa vitalidade luminosa, entusiasmo moderado e harmonia alegre.';
+          ? 'Amarelo-ouro moderado: criatividade focada e energia equilibrada.'
+          : 'Amarelo-ouro vibrante: vitalidade luminosa e harmonia alegre.';
     }
     return lightness < 0.5
-        ? 'Amarelo intenso e escuro: simboliza energia poderosa, alegria marcante e estímulo mental vibrante.'
-        : 'Amarelo intenso e claro: reflete brilho radiante, otimismo exuberante e inspiração contagiante.';
-
-  } else if (hue >= 90 && hue < 150) { // VERDE
+        ? 'Amarelo-ouro intenso e escuro: energia poderosa e estímulo mental.'
+        : 'Amarelo-ouro intenso e claro: brilho radiante e otimismo exuberante.';
+  } else if (hue >= 90 && hue < 120) { // AMARELO-LIMÃO
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Verde escuro e suave: transmite serenidade introspectiva, equilíbrio natural e harmonia reservada.'
-          : 'Verde claro e suave: sugere tranquilidade, conexão com a natureza e rejuvenescimento leve.';
+          ? 'Amarelo-limão escuro e suave: clareza interior e serenidade discreta.'
+          : 'Amarelo-limão claro e suave: inspiração serena e leveza.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Verde moderado: representa vitalidade saudável, equilíbrio emocional e frescor moderado.'
-          : 'Verde vibrante: expressa harmonia luminosa, energia serena e sensação de crescimento e renovação.';
+          ? 'Amarelo-limão moderado: energia equilibrada e pensamento claro.'
+          : 'Amarelo-limão vibrante: alegria radiante e criatividade leve.';
     }
     return lightness < 0.5
-        ? 'Verde intenso e escuro: simboliza força natural, vitalidade profunda e energia revigorante.'
-        : 'Verde intenso e claro: reflete frescor exuberante, renovação vibrante e vitalidade contagiante.';
-
-  } else if (hue >= 150 && hue < 210) { // CIANO
+        ? 'Amarelo-limão intenso e escuro: estímulo mental e energia marcante.'
+        : 'Amarelo-limão intenso e claro: otimismo contagiante e inspiração vibrante.';
+  } else if (hue >= 120 && hue < 150) { // VERDE-LIMÃO
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Ciano escuro e suave: evoca calma profunda, introspecção e serenidade sutil.'
-          : 'Ciano claro e suave: transmite paz, relaxamento e harmonia mental leve.';
+          ? 'Verde-limão escuro e suave: equilíbrio natural e serenidade introspectiva.'
+          : 'Verde-limão claro e suave: rejuvenescimento leve e tranquilidade.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Ciano moderado: sugere harmonia equilibrada, concentração serena e frescor mental.'
-          : 'Ciano vibrante: expressa vitalidade tranquila, serenidade luminosa e clareza de ideias.';
+          ? 'Verde-limão moderado: vitalidade saudável e frescor moderado.'
+          : 'Verde-limão vibrante: energia serena e sensação de renovação.';
     }
     return lightness < 0.5
-        ? 'Ciano intenso e escuro: simboliza energia relaxante, foco profundo e equilíbrio emocional.'
-        : 'Ciano intenso e claro: reflete brilho revigorante, tranquilidade vibrante e frescor contagiante.';
-  } else if (hue >= 210 && hue < 270) { // AZUL
+        ? 'Verde-limão intenso e escuro: força natural e energia revigorante.'
+        : 'Verde-limão intenso e claro: frescor exuberante e vitalidade contagiante.';
+  } else if (hue >= 150 && hue < 180) { // VERDE
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Azul escuro e suave: transmite serenidade profunda, introspecção e reflexão calma.'
-          : 'Azul claro e suave: sugere tranquilidade, paz interior e harmonia delicada.';
+          ? 'Verde escuro e suave: harmonia reservada e introspecção.'
+          : 'Verde claro e suave: conexão com a natureza e serenidade.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Azul moderado: representa calma equilibrada, foco interno e estabilidade emocional.'
-          : 'Azul vibrante: expressa harmonia luminosa, serenidade ativa e inspiração suave.';
+          ? 'Verde moderado: equilíbrio emocional e vitalidade.'
+          : 'Verde vibrante: harmonia luminosa e sensação de crescimento.';
     }
     return lightness < 0.5
-        ? 'Azul intenso e escuro: simboliza força silenciosa, disciplina e energia concentrada.'
-        : 'Azul intenso e claro: reflete clareza radiante, tranquilidade vibrante e inspiração poderosa.';
-
-  } else if (hue >= 270 && hue < 330) { // ROXO
+        ? 'Verde intenso e escuro: vitalidade profunda e energia revigorante.'
+        : 'Verde intenso e claro: renovação vibrante e vitalidade contagiante.';
+  } else if (hue >= 180 && hue < 210) { // VERDE-ÁGUA / CIANO
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Roxo escuro e suave: evoca misticismo discreto, introspecção profunda e criatividade reservada.'
-          : 'Roxo claro e suave: transmite sonhos suaves, imaginação delicada e inspiração tranquila.';
+          ? 'Verde-água escuro e suave: calma profunda e serenidade sutil.'
+          : 'Verde-água claro e suave: paz e relaxamento.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Roxo moderado: sugere criatividade equilibrada, imaginação focada e energia introspectiva.'
-          : 'Roxo vibrante: expressa inspiração luminosa, criatividade moderada e harmonia imaginativa.';
+          ? 'Verde-água moderado: harmonia equilibrada e frescor mental.'
+          : 'Verde-água vibrante: vitalidade tranquila e clareza de ideias.';
     }
     return lightness < 0.5
-        ? 'Roxo intenso e escuro: simboliza energia criativa poderosa, expressão vibrante e misticismo marcante.'
-        : 'Roxo intenso e claro: reflete criatividade radiante, sonho exuberante e espiritualidade luminosa.';
-
-  } else { // ROSA
+        ? 'Verde-água intenso e escuro: energia relaxante e equilíbrio emocional.'
+        : 'Verde-água intenso e claro: brilho revigorante e frescor contagiante.';
+  } else if (hue >= 210 && hue < 240) { // AZUL-CIANO
     if (saturation < 0.4) {
       return lightness < 0.5
-          ? 'Rosa escuro e suave: transmite doçura introspectiva, delicadeza reservada e ternura contida.'
-          : 'Rosa claro e suave: sugere leveza serena, carinho tranquilo e ternura delicada.';
+          ? 'Azul-ciano escuro e suave: introspecção e serenidade profunda.'
+          : 'Azul-ciano claro e suave: paz interior e harmonia delicada.';
     }
     if (saturation < 0.7) {
       return lightness < 0.5
-          ? 'Rosa moderado: representa afeto equilibrado, calor emocional e energia suave.'
-          : 'Rosa vibrante: expressa ternura equilibrada, harmonia calorosa e afeto luminoso.';
+          ? 'Azul-ciano moderado: calma equilibrada e estabilidade emocional.'
+          : 'Azul-ciano vibrante: serenidade ativa e inspiração suave.';
     }
     return lightness < 0.5
-        ? 'Rosa intenso e escuro: simboliza paixão afetiva intensa, emoção vibrante e expressão sentimental profunda.'
-        : 'Rosa intenso e claro: reflete amor radiante, ternura exuberante e máxima expressão afetiva.';
+        ? 'Azul-ciano intenso e escuro: força silenciosa e disciplina.'
+        : 'Azul-ciano intenso e claro: clareza radiante e inspiração poderosa.';
+  } else if (hue >= 240 && hue < 270) { // AZUL
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Azul escuro e suave: reflexão calma e introspecção.'
+          : 'Azul claro e suave: tranquilidade e paz interior.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Azul moderado: foco interno e estabilidade.'
+          : 'Azul vibrante: harmonia luminosa e serenidade ativa.';
+    }
+    return lightness < 0.5
+        ? 'Azul intenso e escuro: energia concentrada e disciplina.'
+        : 'Azul intenso e claro: tranquilidade vibrante e inspiração.';
+  } else if (hue >= 270 && hue < 300) { // AZUL-ROXO
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Azul-roxo escuro e suave: misticismo discreto e criatividade reservada.'
+          : 'Azul-roxo claro e suave: sonhos suaves e imaginação delicada.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Azul-roxo moderado: imaginação focada e energia introspectiva.'
+          : 'Azul-roxo vibrante: criatividade moderada e harmonia imaginativa.';
+    }
+    return lightness < 0.5
+        ? 'Azul-roxo intenso e escuro: expressão vibrante e misticismo marcante.'
+        : 'Azul-roxo intenso e claro: criatividade radiante e espiritualidade luminosa.';
+  } else if (hue >= 300 && hue < 330) { // ROXO
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Roxo escuro e suave: introspecção profunda e criatividade reservada.'
+          : 'Roxo claro e suave: imaginação delicada e inspiração tranquila.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Roxo moderado: criatividade equilibrada e energia introspectiva.'
+          : 'Roxo vibrante: inspiração luminosa e criatividade moderada.';
+    }
+    return lightness < 0.5
+        ? 'Roxo intenso e escuro: energia criativa poderosa e misticismo marcante.'
+        : 'Roxo intenso e claro: sonho exuberante e espiritualidade luminosa.';
+  } else { // 330 a 360 - ROSA
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Rosa escuro e suave: doçura introspectiva e delicadeza reservada.'
+          : 'Rosa claro e suave: leveza serena e ternura delicada.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Rosa moderado: afeto equilibrado e energia suave.'
+          : 'Rosa vibrante: ternura equilibrada e afeto luminoso.';
+    }
+    return lightness < 0.5
+        ? 'Rosa intenso e escuro: paixão afetiva intensa e emoção vibrante.'
+        : 'Rosa intenso e claro: amor radiante e máxima expressão afetiva.';
   }
 }
 
