@@ -45,146 +45,148 @@ class _TelaDetalheCorState extends State<TelaDetalheCor> {
   }
 
   String _getSignificadoPorHSL(Color cor) {
-    final hsl = HSLColor.fromColor(cor);
-    final hue = hsl.hue;
-    final saturation = _saturacao(cor); // Usa a função personalizada
-    final lightness = hsl.lightness;
-    
-    // Cores muito escuras (pretos e cinzas escuros)
-    if (lightness < 0.15) {
-      if (saturation < 0.1) return 'Poder absoluto, elegância sofisticada, mistério profundo, luto respeitoso.';
-      if (saturation < 0.3) return 'Poder discreto, elegância refinada, mistério sutil, sofisticação.';
-      return 'Poder intenso, elegância dramática, mistério envolvente, autoridade.';
-    }
-    
-    // Cores muito claras (brancos e tons pastéis muito claros)
-    if (lightness > 0.85) {
-      if (saturation < 0.1) return 'Pureza absoluta, paz interior, inocência celestial, simplicidade divina.';
-      if (saturation < 0.3) return 'Pureza suave, paz tranquila, inocência delicada, simplicidade elegante.';
-      return 'Pureza luminosa, paz serena, inocência radiante, simplicidade refinada.';
-    }
-    
-    // Cores com saturação muito baixa (tons neutros)
-    if (saturation < 0.15) {
-      if (lightness < 0.4) return 'Neutralidade profunda, equilíbrio interior, indecisão contemplativa, formalidade elegante.';
-      if (lightness < 0.7) return 'Neutralidade equilibrada, equilíbrio harmonioso, indecisão ponderada, formalidade discreta.';
-      return 'Neutralidade suave, equilíbrio delicado, indecisão serena, formalidade refinada.';
-    }
-    
-    // VERMELHOS (0-30°)
-    if (hue >= 0 && hue < 30) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Paixão suave e introspectiva, ternura profunda, carinho maternal, amor discreto.';
-        return 'Paixão delicada e romântica, ternura gentil, carinho infantil, amor puro.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Energia moderada e focada, paixão determinada, coragem interior, amor sincero.';
-        return 'Energia equilibrada e calorosa, paixão romântica, entusiasmo contido, amor verdadeiro.';
-      } else {
-        if (lightness < 0.5) return 'Energia intensa e poderosa, paixão ardente e irresistível, ação decisiva, amor profundo e apaixonado.';
-        return 'Energia vibrante e exuberante, paixão ardente e contagiante, ação dinâmica, amor intenso e romântico.';
-      }
-    }
-    
-    // LARANJAS (30-60°)
-    if (hue >= 30 && hue < 60) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Alegria suave e acolhedora, criatividade introspectiva, otimismo discreto, calor humano.';
-        return 'Alegria delicada e radiante, criatividade gentil, otimismo puro, calor maternal.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Alegria equilibrada e confiante, criatividade focada, otimismo realista, entusiasmo moderado.';
-        return 'Alegria harmoniosa e contagiante, criatividade inspiradora, otimismo genuíno, entusiasmo sincero.';
-      } else {
-        if (lightness < 0.5) return 'Alegria exuberante e energética, criatividade vibrante e inovadora, otimismo contagiante, entusiasmo irresistível.';
-        return 'Alegria radiante e luminosa, criatividade vibrante e expressiva, otimismo exuberante, entusiasmo contagiante.';
-      }
-    }
-    
-    // AMARELOS (60-90°)
-    if (hue >= 60 && hue < 90) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Alegria suave e intelectual, criatividade contemplativa, atenção sutil, energia mental.';
-        return 'Alegria delicada e luminosa, criatividade gentil, atenção pura, energia espiritual.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Alegria equilibrada e focada, criatividade produtiva, atenção concentrada, energia vital.';
-        return 'Alegria harmoniosa e inspiradora, criatividade expressiva, atenção genuína, energia positiva.';
-      } else {
-        if (lightness < 0.5) return 'Alegria vibrante e energética, criatividade inovadora e dinâmica, atenção irresistível, energia contagiante.';
-        return 'Alegria radiante e luminosa, criatividade vibrante e expressiva, atenção magnética, energia exuberante.';
-      }
-    }
-    
-    // VERDES (90-150°)
-    if (hue >= 90 && hue < 150) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Natureza suave e contemplativa, tranquilidade profunda, paz interior, crescimento sutil.';
-        return 'Natureza delicada e serena, tranquilidade celestial, paz pura, crescimento gentil.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Natureza equilibrada e estável, tranquilidade confiante, paz harmoniosa, crescimento constante.';
-        return 'Natureza harmoniosa e vital, tranquilidade serena, paz genuína, crescimento saudável.';
-      } else {
-        if (lightness < 0.5) return 'Natureza vibrante e vigorosa, saúde robusta, crescimento vigoroso e dinâmico, esperança inabalável.';
-        return 'Natureza radiante e exuberante, saúde vibrante, crescimento vigoroso e contagiante, esperança luminosa.';
-      }
-    }
-    
-    // AZUIS (150-210°)
-    if (hue >= 150 && hue < 210) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Calma profunda e contemplativa, serenidade interior, conforto espiritual, estabilidade emocional.';
-        return 'Calma delicada e celestial, serenidade pura, conforto maternal, estabilidade gentil.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Calma confiante e estável, serenidade equilibrada, conforto seguro, estabilidade sólida.';
-        return 'Calma harmoniosa e serena, serenidade genuína, conforto acolhedor, estabilidade tranquila.';
-      } else {
-        if (lightness < 0.5) return 'Calma profunda e absoluta, confiança inabalável, estabilidade inquebrantável, serenidade suprema.';
-        return 'Calma radiante e luminosa, confiança absoluta, estabilidade perfeita, serenidade celestial.';
-      }
-    }
-    
-    // ROXOS/VIOLETAS (210-270°)
-    if (hue >= 210 && hue < 270) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Espiritualidade suave e introspectiva, intuição sutil, mistério discreto, criatividade contemplativa.';
-        return 'Espiritualidade delicada e celestial, intuição pura, mistério gentil, criatividade espiritual.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Espiritualidade equilibrada e focada, mistério harmonioso, criatividade produtiva, nobreza discreta.';
-        return 'Espiritualidade harmoniosa e inspiradora, mistério sereno, criatividade expressiva, nobreza genuína.';
-      } else {
-        if (lightness < 0.5) return 'Espiritualidade intensa e profunda, mistério envolvente e hipnótico, criatividade inovadora, nobreza majestosa.';
-        return 'Espiritualidade radiante e luminosa, mistério fascinante, criatividade vibrante, nobreza celestial.';
-      }
-    }
-    
-    // MAGENTAS/ROSAS (270-330°)
-    if (hue >= 270 && hue < 330) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Romance suave e introspectivo, ternura profunda, carinho maternal, feminilidade discreta.';
-        return 'Romance delicado e celestial, ternura pura, carinho infantil, feminilidade gentil.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Romance equilibrado e sincero, ternura harmoniosa, carinho genuíno, feminilidade elegante.';
-        return 'Romance harmonioso e inspirador, ternura serena, carinho acolhedor, feminilidade refinada.';
-      } else {
-        if (lightness < 0.5) return 'Romance intenso e apaixonado, ternura profunda e envolvente, carinho maternal, feminilidade majestosa.';
-        return 'Romance radiante e luminoso, ternura vibrante, carinho contagiante, feminilidade celestial.';
-      }
-    }
-    
-    // VERMELHOS-MAGENTA (330-360°)
-    if (hue >= 330 && hue < 360) {
-      if (saturation < 0.4) {
-        if (lightness < 0.5) return 'Paixão suave e romântica, amor discreto, carinho maternal, energia sutil.';
-        return 'Paixão delicada e pura, amor celestial, carinho infantil, energia gentil.';
-      } else if (saturation < 0.7) {
-        if (lightness < 0.5) return 'Paixão equilibrada e sincera, amor verdadeiro, carinho genuíno, energia harmoniosa.';
-        return 'Paixão harmoniosa e inspiradora, amor sereno, carinho acolhedor, energia positiva.';
-      } else {
-        if (lightness < 0.5) return 'Paixão ardente e irresistível, energia intensa e dinâmica, ação decisiva, amor profundo e apaixonado.';
-        return 'Paixão radiante e luminosa, energia vibrante e contagiante, ação dinâmica, amor intenso e romântico.';
-      }
-    }
-    
-    return 'Cor única com características especiais e distintivas.';
+  final hsl = HSLColor.fromColor(cor);
+  final hue = hsl.hue;
+  final saturation = _saturacao(cor);
+  final lightness = hsl.lightness;
+
+  // Cores muito escuras
+  if (lightness < 0.15) {
+    if (saturation < 0.05) return 'Poder absoluto, elegância sofisticada, mistério profundo, luto respeitoso.';
+    if (saturation < 0.15) return 'Poder discreto, elegância refinada, mistério sutil, sofisticação.';
+    if (saturation < 0.35) return 'Poder moderado, elegância equilibrada, mistério envolvente, autoridade.';
+    return 'Poder intenso, elegância dramática, mistério envolvente, autoridade.';
   }
+
+  // Cores muito claras
+  if (lightness > 0.85) {
+    if (saturation < 0.05) return 'Pureza absoluta, paz interior, inocência celestial, simplicidade divina.';
+    if (saturation < 0.15) return 'Pureza suave, paz tranquila, inocência delicada, simplicidade elegante.';
+    if (saturation < 0.35) return 'Pureza equilibrada, paz serena, inocência radiante, simplicidade refinada.';
+    return 'Pureza luminosa, paz serena, inocência radiante, simplicidade refinada.';
+  }
+
+  // Matiz por faixa de cor
+  if (hue >= 0 && hue < 30) { // VERMELHOS
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Vermelho escuro e pouco saturado: transmite introspecção, elegância reservada e uma paixão contida, quase misteriosa.'
+          : 'Vermelho claro e pouco saturado: sugere romantismo delicado, ternura e uma energia emocional suave e acolhedora.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Vermelho moderado: representa energia focada, força interior, coragem e determinação sem excessos.'
+          : 'Vermelho vibrante: expressa calor humano, entusiasmo, vitalidade e uma paixão equilibrada e positiva.';
+    }
+    return lightness < 0.5
+        ? 'Vermelho intenso e escuro: simboliza poder, desejo profundo, intensidade emocional e liderança marcante.'
+        : 'Vermelho intenso e claro: reflete paixão vibrante, dinamismo, ousadia e uma energia contagiante.';
+  } else if (hue >= 30 && hue < 60) { // LARANJA
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Laranja discreto e escuro: inspira criatividade reservada, aconchego sutil e entusiasmo moderado.'
+          : 'Laranja claro e suave: transmite alegria tranquila, otimismo leve e motivação gentil.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Laranja moderado: sugere sociabilidade equilibrada, dinamismo positivo e energia acolhedora.'
+          : 'Laranja vibrante: expressa vitalidade, entusiasmo, criatividade e otimismo radiante.';
+    }
+    return lightness < 0.5
+        ? 'Laranja intenso e escuro: representa inspiração poderosa, motivação forte e energia transformadora.'
+        : 'Laranja intenso e claro: simboliza alegria contagiante, criatividade exuberante e entusiasmo expansivo.';
+        
+  } else if (hue >= 60 && hue < 90) { // AMARELOS
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Amarelo escuro e suave: evoca otimismo discreto, clareza interior e reflexão positiva.'
+          : 'Amarelo claro e suave: transmite leveza mental, alegria delicada e inspiração serena.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Amarelo moderado: sugere criatividade focada, energia equilibrada e pensamento claro.'
+          : 'Amarelo vibrante: expressa vitalidade luminosa, entusiasmo moderado e harmonia alegre.';
+    }
+    return lightness < 0.5
+        ? 'Amarelo intenso e escuro: simboliza energia poderosa, alegria marcante e estímulo mental vibrante.'
+        : 'Amarelo intenso e claro: reflete brilho radiante, otimismo exuberante e inspiração contagiante.';
+
+  } else if (hue >= 90 && hue < 150) { // VERDE
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Verde escuro e suave: transmite serenidade introspectiva, equilíbrio natural e harmonia reservada.'
+          : 'Verde claro e suave: sugere tranquilidade, conexão com a natureza e rejuvenescimento leve.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Verde moderado: representa vitalidade saudável, equilíbrio emocional e frescor moderado.'
+          : 'Verde vibrante: expressa harmonia luminosa, energia serena e sensação de crescimento e renovação.';
+    }
+    return lightness < 0.5
+        ? 'Verde intenso e escuro: simboliza força natural, vitalidade profunda e energia revigorante.'
+        : 'Verde intenso e claro: reflete frescor exuberante, renovação vibrante e vitalidade contagiante.';
+
+  } else if (hue >= 150 && hue < 210) { // CIANO
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Ciano escuro e suave: evoca calma profunda, introspecção e serenidade sutil.'
+          : 'Ciano claro e suave: transmite paz, relaxamento e harmonia mental leve.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Ciano moderado: sugere harmonia equilibrada, concentração serena e frescor mental.'
+          : 'Ciano vibrante: expressa vitalidade tranquila, serenidade luminosa e clareza de ideias.';
+    }
+    return lightness < 0.5
+        ? 'Ciano intenso e escuro: simboliza energia relaxante, foco profundo e equilíbrio emocional.'
+        : 'Ciano intenso e claro: reflete brilho revigorante, tranquilidade vibrante e frescor contagiante.';
+  } else if (hue >= 210 && hue < 270) { // AZUL
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Azul escuro e suave: transmite serenidade profunda, introspecção e reflexão calma.'
+          : 'Azul claro e suave: sugere tranquilidade, paz interior e harmonia delicada.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Azul moderado: representa calma equilibrada, foco interno e estabilidade emocional.'
+          : 'Azul vibrante: expressa harmonia luminosa, serenidade ativa e inspiração suave.';
+    }
+    return lightness < 0.5
+        ? 'Azul intenso e escuro: simboliza força silenciosa, disciplina e energia concentrada.'
+        : 'Azul intenso e claro: reflete clareza radiante, tranquilidade vibrante e inspiração poderosa.';
+
+  } else if (hue >= 270 && hue < 330) { // ROXO
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Roxo escuro e suave: evoca misticismo discreto, introspecção profunda e criatividade reservada.'
+          : 'Roxo claro e suave: transmite sonhos suaves, imaginação delicada e inspiração tranquila.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Roxo moderado: sugere criatividade equilibrada, imaginação focada e energia introspectiva.'
+          : 'Roxo vibrante: expressa inspiração luminosa, criatividade moderada e harmonia imaginativa.';
+    }
+    return lightness < 0.5
+        ? 'Roxo intenso e escuro: simboliza energia criativa poderosa, expressão vibrante e misticismo marcante.'
+        : 'Roxo intenso e claro: reflete criatividade radiante, sonho exuberante e espiritualidade luminosa.';
+
+  } else { // ROSA
+    if (saturation < 0.4) {
+      return lightness < 0.5
+          ? 'Rosa escuro e suave: transmite doçura introspectiva, delicadeza reservada e ternura contida.'
+          : 'Rosa claro e suave: sugere leveza serena, carinho tranquilo e ternura delicada.';
+    }
+    if (saturation < 0.7) {
+      return lightness < 0.5
+          ? 'Rosa moderado: representa afeto equilibrado, calor emocional e energia suave.'
+          : 'Rosa vibrante: expressa ternura equilibrada, harmonia calorosa e afeto luminoso.';
+    }
+    return lightness < 0.5
+        ? 'Rosa intenso e escuro: simboliza paixão afetiva intensa, emoção vibrante e expressão sentimental profunda.'
+        : 'Rosa intenso e claro: reflete amor radiante, ternura exuberante e máxima expressão afetiva.';
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -121,8 +121,6 @@ class TelaPrincipal extends StatefulWidget {
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
   final List<CorDetectadaModel> _cores = [];
-  // Remover ScrollController
-  // final ScrollController _scrollController = ScrollController();
   bool _carregando = false;
   bool _temMais = true;
   int _offset = 0;
@@ -132,16 +130,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   void initState() {
     super.initState();
     _carregarMais();
-    // _scrollController.addListener(_onScroll); // Remover listener
   }
 
   @override
   void dispose() {
-    // _scrollController.dispose(); // Remover dispose
     super.dispose();
   }
-
-  // Remover _onScroll()
 
   Future<void> _carregarMais() async {
     setState(() { _carregando = true; });
@@ -177,7 +171,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         child: _cores.isEmpty && !_carregando
             ? const Center(child: Text('Nenhuma foto armazenada', style: TextStyle(fontSize: 18, color: Colors.grey)))
             : ListView.builder(
-                // Remover controller: _scrollController,
                 itemCount: _cores.length + (_temMais ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index < _cores.length) {
@@ -423,12 +416,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     );
   }
 
-  // Adicionar método para buscar o registro completo pelo id
+  // método para buscar o registro completo pelo id
   Future<CorDetectadaModel?> _buscarCorCompletaPorId(int id) async {
     return await findCorById(id);
   }
 
-  // Novo método para exibir a foto priorizando o path
+  // método para exibir a foto priorizando o path
   Widget _buildFotoCompleta(CorDetectadaModel cor) {
     if (cor.imagemPath != null && cor.imagemPath!.isNotEmpty) {
       return ClipRRect(
