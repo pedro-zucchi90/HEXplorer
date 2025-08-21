@@ -20,12 +20,17 @@
   <a href="#status"><img src="https://img.shields.io/badge/Status-Produção-brightgreen?style=for-the-badge" alt="Status"></a>
   <a href="#versão"><img src="https://img.shields.io/badge/Versão-1.0.0-blue?style=for-the-badge" alt="Versão"></a>
   <a href="#licença"><img src="https://img.shields.io/badge/Licença-MIT-yellow?style=for-the-badge" alt="Licença"></a>
+
+  <a href="https://www.mediafire.com/file/p25codmeyvnlv0s/HEXplorer-release.apk/file">
+  <img src="https://img.shields.io/badge/Download-APK-blue?style=for-the-badge&logo=android&logoColor=white" alt="Download APK">
+  </a>
 </div>
 
 ---
 
 ## Índice
 
+- [Download](#download)
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Funcionalidades](#funcionalidades)
 - [Arquitetura](#arquitetura)
@@ -35,6 +40,14 @@
 - [Documentação Técnica](#documentação-técnica)
 - [Contribuindo](#contribuindo)
 - [Licença](#licença)
+
+---
+
+## Download
+
+Você pode baixar a versão mais recente do **HEXplorer (APK Release)** pelo link abaixo:
+
+👉 [Download HEXplorer - Release APK](https://www.mediafire.com/file/p25codmeyvnlv0s/HEXplorer-release.apk/file)
 
 ---
 
