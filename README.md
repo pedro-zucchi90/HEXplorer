@@ -342,7 +342,7 @@ final List<double> _protanopiaMatrix = [
 
 ## Contato
 
-- **Desenvolvedor**: [Pedro Zucchi](https://github.com/pedro-zucchi90)
+- **Desenvolvedores**: [Pedro Zucchi e Maria Nicolle](https://github.com/pedro-zucchi90)
 - **Email**: pedrozucchi2008@gmail.com
 - **LinkedIn**: [Pedro Zucchi](https://www.linkedin.com/in/pedro-zucchi-52b50132b/)
 
