@@ -21,9 +21,6 @@
   <a href="#version"><img src="https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge" alt="Version"></a>
   <a href="#license"><img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License"></a>
 
-  <a href="https://www.mediafire.com/file/p25codmeyvnlv0s/HEXplorer-release.apk/file">
-  <img src="https://img.shields.io/badge/Download-APK-blue?style=for-the-badge&logo=android&logoColor=white" alt="Download APK">
-  </a>
 </div>
 
 ---
